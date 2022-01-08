@@ -32,16 +32,17 @@ function ExpenseForm(props) {
         setUserInput( (prevState) => {
             return {
                 ...prevState,
-                amount: event.target.value
+                amount: +event.target.value
             };
         });
     };
 
     const dateChangeHandler = (event) => {
+        console.log(event)
         setUserInput( (prevState) => {
             return {
                 ...prevState,
-                date: event.target.value
+                date: new Date(event.target.value)
             };
         });
     };
@@ -61,28 +62,41 @@ function ExpenseForm(props) {
         });
     };
 
-    return (
-        <form onSubmit={ formSubmissionHandler }>
-            <div className="new-expense__controls">
-                <div className="new-expense__control">
-                    <label>Title</label>
-                    <input type="text" value={ userInput.title } onChange={ titleChangeHandler } />
-                </div>
-                <div className="new-expense__control">
-                    <label>Amount</label>
-                    <input type="number" min="0.01" step="0.01" value={ userInput.amount } onChange={ amountChangeHandler } />
-                </div>
-                <div className="new-expense__control">
-                    <label>Date</label>
-                    <input type="date" min="2021-01-01" max="2025-12-31" value={ userInput.date } onChange={ dateChangeHandler } />
-                </div>
-            </div>
-            <div className="new-expense__actions">
-                <button type="submit">Add Expense</button>
-            </div>
-        </form>
-    )
+    const formCancelHandler = (event) => {
+        // Even though it's not a type of submit, a button element clicked inside
+        // a form wil still fire it, so we need to stop that.
+        event.preventDefault();
 
+        // Pass the button click up to our parent which houses the form showing/hiding logic
+        props.onCancelClick();
+    };
+
+    if (props.showForm) {
+        return (
+            <form onSubmit={ formSubmissionHandler }>
+                <div className="new-expense__controls">
+                    <div className="new-expense__control">
+                        <label>Title</label>
+                        <input type="text" value={ userInput.title } onChange={ titleChangeHandler } />
+                    </div>
+                    <div className="new-expense__control">
+                        <label>Amount</label>
+                        <input type="number" min="0.01" step="0.01" value={ userInput.amount } onChange={ amountChangeHandler } />
+                    </div>
+                    <div className="new-expense__control">
+                        <label>Date</label>
+                        <input type="date" value={ userInput.date } onChange={ dateChangeHandler } />
+                    </div>
+                </div>
+                <div className="new-expense__actions">
+                    <button onClick={ formCancelHandler }>Cancel</button>
+                    <button type="submit">Add Expense</button>
+                </div>
+            </form>
+        )
+    } else {
+        return ('');
+    }
 }
 
 export default ExpenseForm;
