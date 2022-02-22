@@ -1,0 +1,9 @@
+.users {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+}
+
+.users .user:last-of-type {
+    margin-bottom: 0;
+}
